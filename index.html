@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="application/javascript" src="draw_tools.js"></script>
+</head>
+<script type="application/javascript" language="javascript">
+
+    window.onload = draw;
+    function draw() {
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var width = canvas.width * 0.9;
+        var height = canvas.height * 0.9;
+
+        canvas.style.backgroundColor = "rgba(255, 255, 255, 1)";
+
+
+        var networkLayer = [4, 7, 1];
+        var maxNeuronNumInLayer = Math.max.apply(Math, networkLayer);
+        var neuronSize = height / maxNeuronNumInLayer;
+        var radius = getRadiusSize(neuronSize);
+
+        var intervalVertical = (height - maxNeuronNumInLayer*radius*2) / maxNeuronNumInLayer;
+        var interval = width / (networkLayer.length-1) - radius;
+
+        var x = radius + 10;
+        var y = 0;
+        var neuronLocationPerLayer = [];
+        for (numberIdx in networkLayer)
+        {
+            var thisLayerNeuronLocation = [];
+            number = networkLayer[numberIdx];
+            console.log("x= " +x);
+            y = (height - number * neuronSize) / 2 + radius + intervalVertical;
+
+            for (var i=0; i < number; ++i)
+            {
+                drawCircle(ctx, x, y, radius, 'white');
+                thisLayerNeuronLocation.push([x, y]);
+                y += (radius*2+intervalVertical);
+            }
+            neuronLocationPerLayer.push(thisLayerNeuronLocation);
+            x += interval;
+        }
+        console.log(neuronLocationPerLayer);
+        for (var i = 0; i < networkLayer.length-1; i++)
+        {
+            var firstLayer = neuronLocationPerLayer[i];
+            var secondLayer = neuronLocationPerLayer[i+1];
+            for (firstIdx in firstLayer)
+            {
+                var firstX = firstLayer[firstIdx][0];
+                var firstY = firstLayer[firstIdx][1];
+                for (secondIdx in secondLayer)
+                {
+                    var secondX = secondLayer[secondIdx][0];
+                    var secondY = secondLayer[secondIdx][1];
+                    drawLineArrow(ctx, firstX+radius, firstY, secondX-radius, secondY);
+                }
+            }
+        }
+
+
+    }
+    function drawCircle(context, centerX, centerY, radius, color, txt) {
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.fillStyle = color;
+      context.fill();
+      context.lineWidth = radius/20;
+      context.strokeStyle = '#000000';
+      context.stroke();
+    }
+
+    function getRadiusSize(neuronSize)
+    {
+        return neuronSize / 2.5;
+    }
+
+</script>
+
+<body>
+
+<canvas id="myCanvas" width="800" height="500"></canvas>
+
+</body>
+</html>
