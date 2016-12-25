@@ -16,9 +16,9 @@
         var height = canvas.height * 0.9;
         canvas.style.backgroundColor = "rgba(255, 255, 255, 1.0)";
         ctx.font="15px Arial";
-        
-        var networkLayer = [4, 7, 8, 4, 1];
-        var bias = false;
+
+        var networkLayer = [6, 4, 2];
+        var bias = true;
 
         var maxNeuronNumInLayer = Math.max.apply(Math, networkLayer);
         var neuronSize = height / maxNeuronNumInLayer;
@@ -44,7 +44,7 @@
                 if (bias === true)
                 {
                     ctx.fillStyle = "black";
-                    ctx.textAlign="center"; 
+                    ctx.textAlign="center";
                     if (numberIdx != networkLayer.length-1)
                     {
                         if (i == 0)
@@ -73,8 +73,11 @@
                     var secondY = secondLayer[secondIdx][1];
                     if (bias === true)
                     {
-                        if (secondIdx == 0 && secondIdx != secondLayer.length-1)
-                            continue;
+                        if (secondIdx == 0 && (i+1) != networkLayer.length-1)
+                            {
+                                console.log(secondIdx)
+                                continue;
+                            }
                         else
                             drawLineArrow(ctx, firstX+radius, firstY, secondX-radius, secondY);
                     }
