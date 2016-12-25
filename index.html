@@ -13,11 +13,12 @@
         var ctx = canvas.getContext("2d");
         var width = canvas.width * 0.9;
         var height = canvas.height * 0.9;
-
         canvas.style.backgroundColor = "rgba(255, 255, 255, 1)";
+        ctx.font="15px Arial";
+        
+        var networkLayer = [4, 7, 4, 1];
+        var bias = true;
 
-
-        var networkLayer = [4, 7, 1];
         var maxNeuronNumInLayer = Math.max.apply(Math, networkLayer);
         var neuronSize = height / maxNeuronNumInLayer;
         var radius = getRadiusSize(neuronSize);
@@ -28,6 +29,7 @@
         var x = radius + 10;
         var y = 0;
         var neuronLocationPerLayer = [];
+
         for (numberIdx in networkLayer)
         {
             var thisLayerNeuronLocation = [];
@@ -38,6 +40,17 @@
             for (var i=0; i < number; ++i)
             {
                 drawCircle(ctx, x, y, radius, 'white');
+                if (bias === true)
+                {
+                    ctx.fillStyle = "black";
+                    ctx.textAlign="center"; 
+                    if (numberIdx != networkLayer.length-1)
+                    {
+                        if (i == 0)
+                            ctx.fillText("+1",x, y);
+                    }
+                }
+
                 thisLayerNeuronLocation.push([x, y]);
                 y += (radius*2+intervalVertical);
             }
@@ -57,7 +70,17 @@
                 {
                     var secondX = secondLayer[secondIdx][0];
                     var secondY = secondLayer[secondIdx][1];
-                    drawLineArrow(ctx, firstX+radius, firstY, secondX-radius, secondY);
+                    if (bias === true)
+                    {
+                        if (secondIdx == 0 && secondIdx != secondLayer.length-1)
+                            continue;
+                        else
+                            drawLineArrow(ctx, firstX+radius, firstY, secondX-radius, secondY);
+                    }
+                    else
+                    {
+                            drawLineArrow(ctx, firstX+radius, firstY, secondX-radius, secondY);
+                    }
                 }
             }
         }
